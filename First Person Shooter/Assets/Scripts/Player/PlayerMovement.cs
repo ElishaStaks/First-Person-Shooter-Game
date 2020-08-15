@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public float m_gravity = -9.81f;
     public float m_walkSpeed = 5f;
-    public float m_sprintSpeed = 10f;
+    //public float m_sprintSpeed = 10f;
     public float m_jumpHeight = 2f;
     public float m_jumpMultiplier = 5f;
     public float m_jumpRememberTime = .2f;
@@ -26,6 +26,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 m_movementInput;
     private Camera m_mainCamera;
     private CharacterController m_character;
+    private bool hasJustLanded = true;
+    private bool isMoving = false;
+    private bool playStep = true;
 
     [HideInInspector] public Vector3 m_velocity;
 
@@ -44,21 +47,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (!PauseController.isPaused)
+        if (!GameManager.isPaused)
         {
             m_jumRememberTimer -= Time.deltaTime;
 
             if (IsGrounded())
             {
+                if (!hasJustLanded)
+                {
+                    hasJustLanded = true;
+                    AudioManager.Instance.PlaySound(SoundType.GROUND_LAND);
+                }
+
                 m_groundedRememberTimer = m_groundedRememberTime;
             }
             else
             {
+                hasJustLanded = false;
                 m_groundedRememberTimer -= Time.deltaTime;
             }
-
-            Movement();
         }
+        Movement();
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -82,7 +91,8 @@ public class PlayerMovement : MonoBehaviour
             m_velocity.y = -2f;
         }
 
-        m_movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        m_movementInput = new Vector2(Input.GetAxis("Horizontal"),
+                                        Input.GetAxis("Vertical"));
 
         Vector3 forward = m_mainCamera.transform.forward;
         Vector3 right = m_mainCamera.transform.right;
@@ -100,7 +110,7 @@ public class PlayerMovement : MonoBehaviour
             m_targetSpeed = m_walkSpeed * m_movementInput.magnitude;
         }
 
-        Sprint();
+        //Sprint();
 
         m_currentSpeed = Mathf.SmoothDamp(m_currentSpeed, m_targetSpeed, ref m_speedSmoothVelocity, m_speedSmoothTime);
         m_character.Move(desiredDirection * m_currentSpeed * Time.deltaTime);
@@ -121,17 +131,18 @@ public class PlayerMovement : MonoBehaviour
             if (m_jumRememberTimer > 0f && m_groundedRememberTimer > 0f)
             {
                 m_velocity.y = Mathf.Sqrt(m_jumpHeight * -2f * m_gravity);
+                AudioManager.Instance.PlaySound(SoundType.JUMP);
             }
         }
     }
 
-    public void Sprint()
-    {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            m_targetSpeed = m_sprintSpeed * m_movementInput.magnitude;
-        }
-    }
+    //public void Sprint()
+    //{
+    //    if (Input.GetKey(KeyCode.LeftShift))
+    //    {
+    //        m_targetSpeed = m_sprintSpeed * m_movementInput.magnitude;
+    //    }
+    //}
 
     public bool IsGrounded()
     {

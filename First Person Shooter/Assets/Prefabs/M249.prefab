@@ -294,6 +294,7 @@ GameObject:
   - component: {fileID: 625743723406659507}
   - component: {fileID: 614206034577841655}
   - component: {fileID: 6994725233931987124}
+  - component: {fileID: 4218750110776348622}
   m_Layer: 0
   m_Name: M249
   m_TagString: Untagged
@@ -380,6 +381,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 01890195b95a26f4fa4aa4f8f5a0cc5e, type: 3}
+--- !u!114 &4218750110776348622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636044827739816457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b77941e88c1eaf44a922b1965d4b831, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &636266523196701573
 GameObject:
   m_ObjectHideFlags: 0
@@ -483,8 +496,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5887944583572820254}
-  - component: {fileID: 9219517314604761089}
-  m_Layer: 10
+  - component: {fileID: 3021634424447959655}
+  m_Layer: 8
   m_Name: M249
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -506,7 +519,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -179.99998, z: 0}
---- !u!114 &9219517314604761089
+--- !u!114 &3021634424447959655
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -515,28 +528,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 2933044053841433366}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eab5f15db5e9e6d4e8de9cd7501b0365, type: 3}
+  m_Script: {fileID: 11500000, guid: 852c55612ff712f489b8ed6c6cf02f04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_throwForce: 8
-  m_throwExtraForce: 3
-  m_rotationForce: 120
-  m_animTime: 0.3
+  m_ammoType: 1
+  m_dropForce: 5
+  m_dropExtraForce: 2
+  m_rotationForce: 50
   m_maxAmmo: 120
   m_shotPerSecond: 20
+  m_bulletsPerTap: 0
   m_reloadSpeed: 3
   m_hitForce: 6
   m_range: 100
-  isFullyAuto: 1
-  m_kickBackForce: 0.075
+  m_kickBackForce: 0.7
   m_resetSmooth: 11.75
-  m_weaponGFXLayer: 11
+  m_damage: 20
+  m_weaponGFXLayer: 8
   m_weaponGFX: {fileID: 2933044053841433366}
-  m_weaponFloatFX: {fileID: 1844191813266838, guid: 968c924d2be019d4b9e67647551eec3e,
-    type: 3}
-  m_gfxCollider:
-  - {fileID: 2929897693826345606}
-  - {fileID: 1669843176722484316}
-  - {fileID: 4890130928672177036}
-  - {fileID: 6355528830034095418}
-  - {fileID: 6994725233931987124}
+  m_weaponFloatFX: {fileID: 0}
+  m_environmentHoleFX: {fileID: 0}
+  m_bloodFX: {fileID: 0}
+  m_gfxCollider: []

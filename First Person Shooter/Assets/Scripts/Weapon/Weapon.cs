@@ -6,9 +6,21 @@ using TMPro;
 
 public class Weapon : MonoBehaviour
 {
-    [Header("Throwing")]
+    public enum WeaponType
+    {
+        PISTOL,
+        LMG,
+        UZI,
+    }
+
+    public WeaponType m_weaponType;
+
+    [Header("Throw")]
     public float m_throwForce;
-    public float m_throwExtraForce;
+
+    [Header("Drop")]
+    public float m_dropForce;
+    public float m_dropExtraForce;
     public float m_rotationForce;
 
     [Header("Pickup")]
@@ -21,7 +33,6 @@ public class Weapon : MonoBehaviour
     public float m_reloadSpeed;
     public float m_hitForce;
     public float m_range;
-    public float m_spread;
     public bool isFullyAuto;
     public float m_kickBackForce;
     public float m_resetSmooth;
@@ -65,7 +76,7 @@ public class Weapon : MonoBehaviour
 
     private void Update()
     {
-        if (!PauseController.isPaused)
+        if (!GameManager.isPaused)
         {
             if (!hasPickedUp)
             {
@@ -105,40 +116,48 @@ public class Weapon : MonoBehaviour
             if ((isFullyAuto ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0)) && !isShooting && !isReloading)
             {
                 Shoot();
+                switch (m_weaponType)
+                {
+                    case WeaponType.PISTOL:
+                        AudioManager.Instance.PlaySound(SoundType.PISTOL_SHOT);
+                        break;
+                    case WeaponType.LMG:
+                        AudioManager.Instance.PlaySound(SoundType.LMG_SHOT);
+                        break;
+                    case WeaponType.UZI:
+                        AudioManager.Instance.PlaySound(SoundType.UZI_SHOT);
+                        break;
+                    default:
+                        break;
+                }
                 m_ammo--;
                 m_ammoText.text = m_ammo + " | " + m_maxAmmo;
                 StartCoroutine(m_ammo <= 0 ? Reload() : CoolDown());
+                CameraShake.instance.Shake(0.1f, 0.03f);
             }
         }
     }
 
-    private void Shoot()
+    public virtual void Shoot()
     {
         transform.localPosition += new Vector3(0, 0, m_kickBackForce);
 
-        float x = Random.Range(-m_spread, m_spread);
-        float y = Random.Range(-m_spread, m_spread);
-
-        Vector3 spreadDirection = m_playerCamera.transform.forward + new Vector3(x, y, 0);
-
         RaycastHit hit;
 
-        if (Physics.Raycast(m_playerCamera.position, spreadDirection, out hit, m_range))
+        if (Physics.Raycast(m_playerCamera.position, m_playerCamera.forward, out hit, m_range))
         {
-            var r = hit.transform.GetComponent<Rigidbody>();
-            var enemy = hit.transform.GetComponent<EnemyBase>();
-
-            if (r != null)
+            var enemy = hit.transform.GetComponent<Monster>();
+            if (enemy != null)
             {
-                if (enemy != null)
-                {
-                    enemy.GetEnemyHealthSystem().Damage(m_damage);
-                    Instantiate(m_bloodFX, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
-                }
-
-                r.velocity += m_playerCamera.forward * m_hitForce;
+                //ImpactReciever reciever = hit.transform.gameObject.GetComponent<ImpactReciever>();
+                //if (reciever)
+                //{
+                //    reciever.AddForce(m_playerCamera.forward, m_hitForce);
+                //}
+                enemy.GetEnemyHealthSystem().Damage(m_damage);
+                Instantiate(m_bloodFX, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
             }
-           
+
             if (hit.collider && !enemy)
             {
                 Instantiate(m_environmentHoleFX, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
@@ -158,6 +177,7 @@ public class Weapon : MonoBehaviour
         isReloading = true;
         m_ammoText.text = "RELOADING MAG";
         m_rotationTime = 0f;
+        AudioManager.Instance.PlaySound(SoundType.RELOAD);
         yield return new WaitForSeconds(m_reloadSpeed);
         m_ammo = m_maxAmmo;
         m_ammoText.text = m_ammo + " | " + m_maxAmmo;
@@ -167,6 +187,7 @@ public class Weapon : MonoBehaviour
     public void PickUp(Transform weaponHolder, Transform playerCamera, TextMeshProUGUI ammoText, GameObject reticle)
     {
         if (isHeld) return;
+        AudioManager.Instance.PlaySound(SoundType.WEAPON_PICKUP);
         Destroy(m_rb);
         Destroy(m_weaponFloatFX);
         transform.parent = weaponHolder;
@@ -192,12 +213,8 @@ public class Weapon : MonoBehaviour
     {
         if (!isHeld) return;
         m_rb = gameObject.AddComponent<Rigidbody>();
+        m_rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         m_rb.mass = .1f;
-        var forward = playerCamera.forward;
-        forward.y = 0;
-        m_rb.velocity = forward * m_throwForce;
-        m_rb.velocity += Vector3.up * m_throwExtraForce;
-        m_rb.angularVelocity = Random.onUnitSphere * m_rotationForce;
         foreach (Collider collider in m_gfxCollider)
         {
             collider.enabled = true;
@@ -206,6 +223,40 @@ public class Weapon : MonoBehaviour
         m_reticle.gameObject.SetActive(false);
         
         transform.parent = null;
+        var forward = -transform.forward;
+        forward.y = 0;
+        m_rb.angularVelocity = Random.onUnitSphere * m_rotationForce;
+
+        m_rb.velocity = forward * m_dropForce;
+        m_rb.velocity += Vector3.up * m_dropExtraForce;
         isHeld = false;
+    }
+
+    public void ThrowWeapon()
+    {
+        if (!isHeld) return;
+        m_rb = gameObject.AddComponent<Rigidbody>();
+        m_rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        m_rb.mass = .1f;
+
+        foreach (Collider collider in m_gfxCollider)
+        {
+            collider.enabled = true;
+        }
+
+        m_ammoText.gameObject.SetActive(false);
+        m_reticle.gameObject.SetActive(false);
+
+        transform.parent = null;
+        var forward = -transform.forward;
+        forward.y = 0;
+
+        m_rb.velocity = forward * m_throwForce;
+        isHeld = false;
+    }
+
+    public int GetPlayerAmmo()
+    {
+        return m_maxAmmo;
     }
 }

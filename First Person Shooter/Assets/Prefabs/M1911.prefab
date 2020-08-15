@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 2102337079678364852}
   - component: {fileID: 2093893473219940304}
   - component: {fileID: 2678807779472960743}
+  - component: {fileID: 8468419407054573991}
   m_Layer: 0
   m_Name: M1911
   m_TagString: Untagged
@@ -193,6 +194,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: b812e42521a5a27499e76cc5ed56e3ac, type: 3}
+--- !u!114 &8468419407054573991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115923429524924512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b77941e88c1eaf44a922b1965d4b831, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2115977406435455358
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,8 +215,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2110758104726376810}
-  - component: {fileID: 8924431486678186295}
-  m_Layer: 10
+  - component: {fileID: 3418402632546337474}
+  m_Layer: 8
   m_Name: M1911
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225,7 +238,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -179.99998, z: 0}
---- !u!114 &8924431486678186295
+--- !u!114 &3418402632546337474
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -234,35 +247,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 2115977406435455358}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eab5f15db5e9e6d4e8de9cd7501b0365, type: 3}
+  m_Script: {fileID: 11500000, guid: d95464bffa7fe4f408dc7067d0423991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_throwForce: 11
-  m_throwExtraForce: 5
-  m_rotationForce: 120
-  m_animTime: 0.3
+  m_ammoType: 0
+  m_dropForce: 5
+  m_dropExtraForce: 2
+  m_rotationForce: 50
   m_maxAmmo: 12
-  m_shotPerSecond: 12
-  m_bulletsPerTap: 0
+  m_shotPerSecond: 0
   m_reloadSpeed: 0.5
-  m_hitForce: 2
-  m_range: 20
-  m_spread: 0
-  isFullyAuto: 0
-  m_kickBackForce: 0.075
+  m_hitForce: 0
+  m_range: 50
+  m_kickBackForce: 0.07
   m_resetSmooth: 11.75
-  m_damage: 0
-  m_weaponGFXLayer: 11
+  m_damage: 10
+  m_weaponGFXLayer: 8
   m_weaponGFX: {fileID: 2115977406435455358}
   m_weaponFloatFX: {fileID: 1844191813266838, guid: 968c924d2be019d4b9e67647551eec3e,
     type: 3}
-  m_bulletHoleFX: {fileID: 0}
+  m_environmentHoleFX: {fileID: 1000010355441670, guid: 02a509a7fa70ed740ba4197e20c5d32d,
+    type: 3}
+  m_bloodFX: {fileID: 1000010191825552, guid: 83e55d3418297934fab882559d009285, type: 3}
   m_gfxCollider:
+  - {fileID: 2678807779472960743}
   - {fileID: 4848862308548768804}
   - {fileID: 8559130169085554319}
   - {fileID: 554518136774050599}
   - {fileID: 8519011269450183212}
-  - {fileID: 2678807779472960743}
 --- !u!1 &2116032177696484058
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,8 @@ public class WeaponManager : MonoBehaviour
     private bool isWeaponHeld;
     private Weapon heldWeapon;
     private Image m_reticleColour;
+    private RaycastHit hit;
+    private float m_aimDistance = 1000f;
 
     private void Awake()
     {
@@ -29,22 +31,47 @@ public class WeaponManager : MonoBehaviour
     {
         if (isWeaponHeld)
         {
-            RaycastHit hit;
-            if (Physics.Raycast(m_playerCamera.position, m_playerCamera.forward, out hit, 1000))
+            if (Physics.Raycast(m_playerCamera.position, m_playerCamera.forward, out hit, m_aimDistance))
             {
-                if (hit.transform.gameObject.CompareTag("Enemy"))
+                var enemy = hit.transform.GetComponent<Monster>();
+
+                if (enemy != null)
                 {
-                    m_reticleColour.color = Color.green;
+                    if (enemy.GetEnemyHealthSystem().GetHealth() > 50)
+                    {
+                        m_reticleColour.color = Color.green;
+                    }
+
+                    if (enemy.GetEnemyHealthSystem().GetHealth() <= 50)
+                    {
+                        m_reticleColour.color = Color.yellow;
+                    }
+
+                    if (enemy.GetEnemyHealthSystem().GetHealth() <= 25)
+                    {
+                        m_reticleColour.color = Color.red;
+                    }
                 }
                 else
                 {
                     m_reticleColour.color = Color.white;
                 }
             }
+            else
+            {
+                m_reticleColour.color = Color.white;
+            }
 
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 heldWeapon.Drop(m_playerCamera);
+                heldWeapon = null;
+                isWeaponHeld = false;
+            }
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                heldWeapon.ThrowWeapon();
                 heldWeapon = null;
                 isWeaponHeld = false;
             }

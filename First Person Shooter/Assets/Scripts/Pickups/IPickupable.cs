@@ -1,0 +1,10 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public interface IPickupable
+{
+    void OnStart();
+    void OnInteract();
+    void OnEnd();
+}
