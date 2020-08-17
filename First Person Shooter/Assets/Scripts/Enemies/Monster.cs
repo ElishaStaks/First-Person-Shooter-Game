@@ -115,8 +115,7 @@ public class Monster : MonoBehaviour
                     m_anim.SetBool("IsAttack", true);
                     Debug.DrawLine(transform.position, transform.position + transform.forward * m_attackRange, Color.red);
                     player.GetHealthSystem().Damage(m_damage);
-                    CameraShake.instance.Shake(0.1f, 0.3f);
-                    //AudioManager.Instance.PlaySound(SoundType.HURT);
+                    //CameraShake.instance.Shake(0.1f, 0.3f);
                 }
             } 
         }
