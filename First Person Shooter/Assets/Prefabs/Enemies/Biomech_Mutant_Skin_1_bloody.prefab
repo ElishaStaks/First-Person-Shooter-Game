@@ -551,6 +551,8 @@ MonoBehaviour:
   m_damage: 6
   m_jumpHeight: 5
   m_spawnFX: {fileID: 100000, guid: 77ec3c4e07a36814fb3169ecef41b50a, type: 3}
+  m_character: {fileID: 0}
+  m_rb: {fileID: 0}
 --- !u!114 &7958122277460496327
 MonoBehaviour:
   m_ObjectHideFlags: 0

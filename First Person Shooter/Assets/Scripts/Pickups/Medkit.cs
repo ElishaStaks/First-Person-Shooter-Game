@@ -22,9 +22,12 @@ public class Medkit : MonoBehaviour
 
     private void Update()
     {
-        float y = Mathf.PingPong(Time.time, 1f);
-        Vector3 axis = new Vector3(0, y, 0);
-        transform.Rotate(axis, 1f);
+        if (!GameManager.isPaused)
+        {
+            float y = Mathf.PingPong(Time.time, 1f);
+            Vector3 axis = new Vector3(0, y, 0);
+            transform.Rotate(axis, 1f);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

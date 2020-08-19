@@ -39,6 +39,7 @@ public class Monster : MonoBehaviour
     {
         m_player = FindObjectOfType<PlayerManager>().transform;
         m_character = GetComponent<CharacterController>();
+
         m_health = GetComponent<HealthSystem>();
         m_agent = GetComponent<NavMeshAgent>();
         m_anim = GetComponent<Animator>();
@@ -115,7 +116,6 @@ public class Monster : MonoBehaviour
                     m_anim.SetBool("IsAttack", true);
                     Debug.DrawLine(transform.position, transform.position + transform.forward * m_attackRange, Color.red);
                     player.GetHealthSystem().Damage(m_damage);
-                    //CameraShake.instance.Shake(0.1f, 0.3f);
                 }
             } 
         }
