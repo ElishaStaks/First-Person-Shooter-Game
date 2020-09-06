@@ -120,8 +120,8 @@ GameObject:
   - component: {fileID: 8428864159338757602}
   - component: {fileID: 8428864159338757603}
   - component: {fileID: 8428864159338757612}
-  - component: {fileID: 2991689511335548348}
-  m_Layer: 0
+  - component: {fileID: 6244867586601092058}
+  m_Layer: 8
   m_Name: Revolver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,14 +171,13 @@ MonoBehaviour:
   allowCancel: 0
   m_projectile: {fileID: 0}
   m_projectileSpawnSpot: {fileID: 0}
-  m_damage: 15
+  m_damage: 20
   m_forceMultiplier: 0
   m_range: 9999
   m_rateOfFire: 3
   m_infiniteAmmo: 0
   showCurrentAmmo: 1
   reloadAutomatically: 1
-  m_ammoText: {fileID: 0}
   m_ammoCapacity: 12
   m_roundsPerShot: 1
   m_reloadTime: 1
@@ -195,12 +194,12 @@ MonoBehaviour:
   m_recoilRecoveryRate: 5
   spitShells: 0
   m_shell: {fileID: 100000, guid: ffed35c05f0f1af45b1e04f88ad8eed0, type: 3}
+  m_shellSpitPosition: {fileID: 0}
   m_shellSpitForce: 1
   m_shellForceRandom: 0.5
   m_shellSpitTorqueX: 0
   m_shellSpitTorqueY: 0
   m_shellTorqueRandom: 1
-  m_shellSpitPosition: {fileID: 0}
   createMuzzleFlashEffect: 1
   m_muzzleFlashEffectPosition: {fileID: 201759069352402605}
   m_muzzleFlashEffects:
@@ -210,15 +209,16 @@ MonoBehaviour:
     type: 3}
   m_bloodHitEffect: {fileID: 1000010191825552, guid: 83e55d3418297934fab882559d009285,
     type: 3}
-  showCrosshair: 1
   m_crosshairTexture: {fileID: 2800000, guid: 9397418d1d7b12543bf27fb61b93bbea, type: 3}
-  m_crosshairImage: {fileID: 0}
   m_crosshairLength: 10
   m_crosshairWidth: 4
   m_startingCrosshairSize: 10
+  hasPickedup: 0
+  m_audioGroup: {fileID: 0}
   m_shootSound: {fileID: 8300000, guid: 4e5b9e18a76970f449790127225af8ab, type: 3}
   m_reloadSound: {fileID: 8300000, guid: d23deffbd331a2a4a881b30af92f3926, type: 3}
   m_dryShotSound: {fileID: 0}
+  createCollider: 1
 --- !u!82 &8428864159338757612
 AudioSource:
   m_ObjectHideFlags: 0
@@ -315,7 +315,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2991689511335548348
+--- !u!114 &6244867586601092058
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -324,6 +324,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8428864159338757601}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95f3a9dbb1e457643aedc9cac74d18f3, type: 3}
+  m_Script: {fileID: 11500000, guid: 1c5073a7c0e9b78479d2100195d59890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_BobMultiplier: 1
+  m_BobbingSpeed: 0.2
+  m_BobbingAmount: 0.1

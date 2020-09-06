@@ -10,7 +10,7 @@ public class HealthUI : MonoBehaviour
     [Header("Timer")]
     public float m_bloodOverlayTime;
     [Header("References")]
-    public Monster m_enemy;
+    //public Entity m_enemy;
 
     private float m_bloodOverlayTimer;
     private TextMeshProUGUI m_healthText;
@@ -48,7 +48,7 @@ public class HealthUI : MonoBehaviour
                 {
                     m_bloodOverlayTimer = m_bloodOverlayTime;
                     m_bloodOverlay.color = m_initialAlpha;
-                    m_alpha.a -= m_enemy.m_damage / 100;
+                    //m_alpha.a -= m_enemy.m_attackDamage / 100;
                     isDamaged = false;
                 }
             }
@@ -113,7 +113,7 @@ public class HealthUI : MonoBehaviour
     private void UpdateBloodOverlay()
     {
         isDamaged = true;
-        m_alpha.a += m_enemy.m_damage / 100;
+        //m_alpha.a += m_enemy.m_attackDamage / 100;
         m_bloodOverlay.color = m_alpha;
     }
 }

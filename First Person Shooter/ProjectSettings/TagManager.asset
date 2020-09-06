@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - JumpPad
   - Enemy
+  - DiagonalPad
   layers:
   - Default
   - TransparentFX
@@ -17,10 +18,10 @@ TagManager:
   - UI
   - 
   - 
-  - Weapon
+  - NotShootable
   - Player
   - Ground
-  - 
+  - Enemy
   - 
   - 
   - 

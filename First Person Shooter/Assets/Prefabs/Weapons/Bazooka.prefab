@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4295028664902926627}
   - component: {fileID: 4295028664902926652}
-  - component: {fileID: 5054241896541591786}
   - component: {fileID: 4295028664902926653}
-  m_Layer: 0
+  - component: {fileID: 1481129108}
+  m_Layer: 8
   m_Name: Bazooka
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,6 @@ MonoBehaviour:
   m_infiniteAmmo: 0
   showCurrentAmmo: 1
   reloadAutomatically: 1
-  m_ammoText: {fileID: 0}
   m_ammoCapacity: 3
   m_roundsPerShot: 1
   m_reloadTime: 2
@@ -88,12 +87,12 @@ MonoBehaviour:
   m_recoilRecoveryRate: 6
   spitShells: 0
   m_shell: {fileID: 0}
+  m_shellSpitPosition: {fileID: 0}
   m_shellSpitForce: 1
   m_shellForceRandom: 0.5
   m_shellSpitTorqueX: 0
   m_shellSpitTorqueY: 0
   m_shellTorqueRandom: 1
-  m_shellSpitPosition: {fileID: 0}
   createMuzzleFlashEffect: 1
   m_muzzleFlashEffectPosition: {fileID: 8736308488759111003}
   m_muzzleFlashEffects:
@@ -101,27 +100,17 @@ MonoBehaviour:
   createHitEffects: 0
   m_groundHitEffect: {fileID: 0}
   m_bloodHitEffect: {fileID: 0}
-  showCrosshair: 0
   m_crosshairTexture: {fileID: 2800000, guid: 9397418d1d7b12543bf27fb61b93bbea, type: 3}
-  m_crosshairImage: {fileID: 0}
   m_crosshairLength: 20
   m_crosshairWidth: 4
   m_startingCrosshairSize: 20
-  m_shootSound: {fileID: 8300000, guid: 4e5b9e18a76970f449790127225af8ab, type: 3}
+  hasPickedup: 0
+  m_audioGroup: {fileID: 9049046895195961999, guid: 2fcb83fc8c13d0d41a842c26a7aa9e64,
+    type: 2}
+  m_shootSound: {fileID: 8300000, guid: 1298d9273e22e344fad7932a3ff671c4, type: 3}
   m_reloadSound: {fileID: 8300000, guid: d23deffbd331a2a4a881b30af92f3926, type: 3}
-  m_dryShotSound: {fileID: 0}
---- !u!114 &5054241896541591786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4295028664902926626}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95f3a9dbb1e457643aedc9cac74d18f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_dryShotSound: {fileID: 8300000, guid: 5dbbd23a67801454f990d49a43fbc089, type: 3}
+  createCollider: 1
 --- !u!82 &4295028664902926653
 AudioSource:
   m_ObjectHideFlags: 0
@@ -218,6 +207,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1481129108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4295028664902926626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c5073a7c0e9b78479d2100195d59890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BobMultiplier: 1
+  m_BobbingSpeed: 0.1
+  m_BobbingAmount: 0.05
 --- !u!1 &4295028666462088072
 GameObject:
   m_ObjectHideFlags: 0

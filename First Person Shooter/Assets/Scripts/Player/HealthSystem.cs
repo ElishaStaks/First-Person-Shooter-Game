@@ -9,7 +9,19 @@ public class HealthSystem : MonoBehaviour
     public event EventHandler OnHealed;
     public event EventHandler OnDead;
 
+    [Header("Health")]
     [SerializeField] private float m_maxHealth;
+
+    [Header("Dead Replacement")]
+    [SerializeField] private bool replaceWhenDead = false;
+    [SerializeField] private GameObject m_deadReplacement;
+    [SerializeField] private bool createExplosion = false;
+    [SerializeField] private GameObject m_explosion;
+
+    [Header("Death Camera Change")]
+    [SerializeField] private bool createDeathCamera = false;
+    public GameObject m_deathCamera;
+
     private float m_currentHealth;
 
     private void Awake()
@@ -47,6 +59,7 @@ public class HealthSystem : MonoBehaviour
     {
         OnDead?.Invoke(this, EventArgs.Empty);
         IsDead();
+        //DeathEffects();
     }
 
     public bool IsDead()
@@ -90,6 +103,29 @@ public class HealthSystem : MonoBehaviour
 
         OnHealthMaxChanged?.Invoke(this, EventArgs.Empty);
         OnHealthChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void DeathEffects()
+    {
+        if (replaceWhenDead)
+        {
+            Instantiate(m_deadReplacement, transform.position, transform.rotation);
+        }
+
+        if (createExplosion)
+        {
+            Instantiate(m_explosion, transform.position, transform.rotation);
+        }
+
+        if (createDeathCamera)
+        {
+            if (m_deathCamera != null)
+            {
+                m_deathCamera.SetActive(true);
+            }
+        }
+
+        Destroy(gameObject);
     }
 
     public bool IsHealthFull()

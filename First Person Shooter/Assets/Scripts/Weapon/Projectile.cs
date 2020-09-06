@@ -6,17 +6,18 @@ using UnityEngine;
 public enum ProjectileType
 {
     STANDARD,
+    BULLET,
 }
-
 public enum DamageType
 {
     DIRECT,
+    EXPLOSIVE,
 }
 
 public class Projectile : MonoBehaviour
 {
     public ProjectileType m_projectileType = ProjectileType.STANDARD;
-    public DamageType m_damageType = DamageType.DIRECT;
+    public DamageType m_damageType = DamageType.EXPLOSIVE;
 
     public float m_damage = 100.0f;
     public float m_blastRadius;
@@ -26,6 +27,7 @@ public class Projectile : MonoBehaviour
     public float m_lifeTime = 20f;
 
     public GameObject m_explosion;
+
     private float m_lifeTimer;
 
     private void Awake()
@@ -40,7 +42,17 @@ public class Projectile : MonoBehaviour
 
         if (m_lifeTimer >= m_lifeTime)
         {
-            Explode(transform.position);
+            switch (m_projectileType)
+            {
+                case ProjectileType.STANDARD:
+                    Explode(transform.position);
+                    break;
+                case ProjectileType.BULLET:
+                    Destroy(gameObject);
+                    break;
+                default:
+                    break;
+            }
         }
 
         if (m_initialForce == 0)
@@ -51,32 +63,39 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (m_damageType == DamageType.DIRECT)
+        switch (m_damageType)
         {
-            OnImpact();
-            Explode(collision.contacts[0].point);
+            case DamageType.DIRECT:
+                var target = collision.collider.transform.GetComponent<PlayerManager>();
+                if (target != null)
+                {
+                    target.GetHealthSystem().Damage(m_damage);
+                    Destroy(gameObject);
+                }
+                break;
+            case DamageType.EXPLOSIVE:
+                ExplosiveImpact();
+                Explode(collision.contacts[0].point);
+                AudioManager.Instance.PlaySound(SoundType.PROJECTILE_EXPLOSION);
+                break;
+            default:
+                break;
         }
     }
 
-    private void OnImpact()
+    private void ExplosiveImpact()
     {
         Vector3 impactPos = transform.position;
         Collider[] colliders = Physics.OverlapSphere(impactPos, m_blastRadius);
         foreach (Collider collider in colliders)
         {
-            var enemy = collider.transform.GetComponent<Monster>();
+            var enemy = collider.transform.GetComponent<Entity>();
             var player = collider.transform.GetComponent<PlayerManager>();
 
             if (enemy != null)
             {
-                var reciever = enemy.transform.GetComponent<ImpactReciever>();
-                if (reciever != null)
-                {
-                    var direction = collider.transform.position - impactPos;
-                    var force = Mathf.Clamp(m_explosiveForce, 0, 50);
-                    reciever.AddForce(direction, force);
-                    enemy.GetEnemyHealthSystem().Damage(m_damage);
-                }
+                //enemy.m_rb.AddExplosionForce(m_explosiveForce, impactPos, m_blastRadius, 0, ForceMode.Impulse);
+                enemy.Damage(m_damage);
             }
 
             if (player != null)
@@ -91,6 +110,12 @@ public class Projectile : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ShootProjectile(float damage, float speed)
+    {
+        m_damage = damage;
+        m_speed = speed;
     }
 
     private void Explode(Vector3 position)

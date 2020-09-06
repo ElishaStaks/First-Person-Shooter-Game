@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Audio;
+using WeaponBobbingV2;
 
 public enum WeaponType
 {
@@ -48,7 +50,7 @@ public class Weapon : MonoBehaviour
     public Transform m_projectileSpawnSpot;
 
     [Header("Damage / Force")]
-    public float m_damage;
+    public float m_damage = 10f;
     public float m_forceMultiplier;
 
     [Header("Range")]
@@ -63,7 +65,6 @@ public class Weapon : MonoBehaviour
     public bool m_infiniteAmmo = false;
     public bool showCurrentAmmo = true;
     public bool reloadAutomatically = true;
-    public TextMeshProUGUI m_ammoText;
     public int m_ammoCapacity = 12;
     public int m_roundsPerShot = 1;
     public float m_reloadTime = 2.0f;
@@ -116,7 +117,6 @@ public class Weapon : MonoBehaviour
     [Header("Cross Hairs")]
     private bool showCrosshair = false;
     public Texture2D m_crosshairTexture;
-    public Image m_crosshairImage;
     public int m_crosshairLength = 10;
     public int m_crosshairWidth = 4;
     public float m_startingCrosshairSize = 10.0f;
@@ -125,9 +125,10 @@ public class Weapon : MonoBehaviour
     [Header("Pick Up")]
     //public GameObject m_weaponFloatingFX;
     private bool isHeld = false;
-    private bool hasPickedup = false;
+    [SerializeField] private bool hasPickedup = false;
 
     [Header("Audio")]
+    public AudioMixerGroup m_audioGroup;
     public AudioClip m_shootSound;
     public AudioClip m_reloadSound;
     public AudioClip m_dryShotSound;
@@ -135,15 +136,22 @@ public class Weapon : MonoBehaviour
     private bool canFire = true;
     private Transform m_playerCamera;
     private CapsuleCollider m_capsuleCollider;
+    public bool createCollider = true;
+    private BobStyle1 m_weaponBobScript;
 
     private void Awake()
     {
         m_playerCamera = Camera.main.transform;
+        m_weaponBobScript = GetComponent<BobStyle1>();
         //m_weaponFloatingFX = Instantiate(m_weaponFloatingFX, transform.position, Quaternion.identity);
-        m_capsuleCollider = gameObject.AddComponent<CapsuleCollider>() as CapsuleCollider;
-        m_capsuleCollider.isTrigger = true;
-        m_capsuleCollider.radius = 1f;
-        m_capsuleCollider.height = 3;
+
+        if (createCollider)
+        {
+            m_capsuleCollider = gameObject.AddComponent<CapsuleCollider>() as CapsuleCollider;
+            m_capsuleCollider.isTrigger = true;
+            m_capsuleCollider.radius = 1f;
+            m_capsuleCollider.height = 3;
+        }
 
         if (m_rateOfFire != 0)
         {
@@ -180,6 +188,13 @@ public class Weapon : MonoBehaviour
         {
             m_crosshairTexture = new Texture2D(0, 0);
         }
+
+        InitialiseAudioMixerGroup(gameObject.GetComponent<AudioSource>());
+    }
+
+    public void InitialiseAudioMixerGroup(AudioSource audioSource)
+    {
+        audioSource.outputAudioMixerGroup = m_audioGroup;
     }
 
     private void Update()
@@ -191,20 +206,8 @@ public class Weapon : MonoBehaviour
                 float y = Mathf.PingPong(Time.time, 1);
                 Vector3 axis = new Vector3(0, y, 0);
                 transform.Rotate(axis, 1);
-            }
 
-            // Ammo Display
-            if (playerWeapon && showCurrentAmmo)
-            {
-                if (m_type == WeaponType.RAYCAST || m_type == WeaponType.PROJECTILE)
-                {
-                    m_ammoText.gameObject.SetActive(true);
-                    m_ammoText.text = m_currentAmmo.ToString() + " | " + m_ammoCapacity.ToString();
-                }
-            }
-            else
-            {
-                m_ammoText.gameObject.SetActive(false);
+                m_weaponBobScript.enabled = false;
             }
 
             if (!showCrosshair)
@@ -219,6 +222,7 @@ public class Weapon : MonoBehaviour
             m_currentCrosshairSize = m_startingCrosshairSize + (m_accuracy - m_currentAccuracy) * .8f;
             // Updates fire timer
             m_shootTimer += Time.deltaTime;
+
 
             // Player input
             if (playerWeapon)
@@ -472,30 +476,25 @@ public class Weapon : MonoBehaviour
                     m_heat = 0.0f;
                 }
 
-                var enemy = hit.transform.GetComponent<Monster>();
-
-                if (enemy != null)
+                if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
-                    ImpactReciever reciever = hit.transform.gameObject.GetComponent<ImpactReciever>();
-                    if (reciever)
-                    {
-                        reciever.AddForce(ray.direction, m_damage * m_forceMultiplier);
-                    }
-                    enemy.GetEnemyHealthSystem().Damage(damage);
+                    var enemy = hit.transform.gameObject.GetComponent<Entity>();
 
                     if (createHitEffects)
                     {
                         Instantiate(m_bloodHitEffect, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
                     }
-                }
-                else
-                {
-                    if (hit.collider && !enemy && hit.collider.gameObject.layer != LayerMask.NameToLayer("Weapon"))
+
+                    if (enemy != null)
                     {
-                        if (createHitEffects)
-                        {
-                            Instantiate(m_groundHitEffect, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
-                        }
+                        enemy.Damage(m_damage);
+                    }
+                }
+                else if ( hit.collider.gameObject.layer != LayerMask.NameToLayer("NotShootable") || hit.collider.gameObject.layer != LayerMask.NameToLayer("Enemy"))
+                {
+                    if (createHitEffects)
+                    {
+                        Instantiate(m_groundHitEffect, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
                     }
                 }
             }
@@ -523,6 +522,7 @@ public class Weapon : MonoBehaviour
         }
 
         GetComponent<AudioSource>().PlayOneShot(m_shootSound);
+
     }
 
     private void Reload()
@@ -611,7 +611,7 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public void WeaponPickup(Transform weaponHolder, List<TextMeshProUGUI> ammoText)
+    public void WeaponPickup(Transform weaponHolder)
     {
         if (isHeld) return;
 
@@ -621,22 +621,37 @@ public class Weapon : MonoBehaviour
         transform.parent = weaponHolder;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+
         switch (m_name)
         {
             case "Bazooka":
-                transform.localPosition = new Vector3(.42f, -0.517f, .527f);
+                m_weaponBobScript.m_InitPos = transform.localPosition = new Vector3(.42f, -0.517f, .527f);
                 break;
             case "M16":
-                transform.localPosition = new Vector3(.41f, -.609f, 0.558f);
+                m_weaponBobScript.m_InitPos = transform.localPosition = new Vector3(.41f, -.609f, 0.558f);
                 break;
             case "Revolver":
-                transform.localPosition = new Vector3(.305f, -.305f, .474f);
+                m_weaponBobScript.m_InitPos = transform.localPosition = new Vector3(.305f, -.305f, .474f);
+                break;
+            case "Shotgun":
+                m_weaponBobScript.m_InitPos = transform.localPosition = new Vector3(.26f, -0.31f, 0.34f);
                 break;
         }
 
+        m_weaponBobScript.enabled = true;
         playerWeapon = true;
         hasPickedup = true;
         isHeld = true;
-        ammoText.Add(m_ammoText);
+        AudioManager.Instance.PlaySound(SoundType.WEAPON_PICKUP);
+    }
+
+    public int GetCurrentAmmo()
+    {
+        return m_currentAmmo;
+    }
+
+    public int GetAmmoCapacity()
+    {
+        return m_ammoCapacity;
     }
 }

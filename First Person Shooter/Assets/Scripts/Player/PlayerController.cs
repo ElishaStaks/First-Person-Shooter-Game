@@ -14,8 +14,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_speedSmoothTime = .1f;
     [SerializeField] private Transform m_groundedCheck;
     [SerializeField] private LayerMask m_groundMask;
-
     [SerializeField] private bool lockCursor = true;
+
+    public Vector3 desiredDirection { get; private set; }
 
     private float m_initialWalkSpeed;
     private float m_groundedRememberTimer;
@@ -57,18 +58,25 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = true;
     }
 
+    public bool IsGrounded
+    {
+        get
+        {
+            return m_character.isGrounded;
+        }
+    }
+
     private void Update()
     {
         if (!GameManager.isPaused)
         {
             m_jumRememberTimer -= Time.deltaTime;
 
-            if (IsGrounded())
+            if (m_character.isGrounded)
             {
                 if (!hasJustLanded)
                 {
                     hasJustLanded = true;
-                    //AudioManager.Instance.PlaySound(SoundType.GROUND_LAND);
                 }
 
                 m_groundedRememberTimer = m_groundedRememberTime;
@@ -82,23 +90,9 @@ public class PlayerController : MonoBehaviour
         Movement();
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        switch (hit.gameObject.tag)
-        {
-            case "JumpPad":
-                m_velocity.y = Mathf.Sqrt(m_jumpHeight * m_jumpMultiplier * -2f * m_gravity);
-                break;
-
-            case "Ground":
-                m_walkSpeed = m_initialWalkSpeed;
-                break;
-        }
-    }
-
     public void Movement()
     {
-        if (IsGrounded() && m_velocity.y < 0)
+        if (m_character.isGrounded && m_velocity.y < 0)
         {
             m_velocity.y = -2f;
         }
@@ -115,7 +109,7 @@ public class PlayerController : MonoBehaviour
         forward.Normalize();
         right.Normalize();
 
-        Vector3 desiredDirection = (forward * m_movementInput.y + right * m_movementInput.x).normalized;
+        desiredDirection = forward * m_movementInput.y + right * m_movementInput.x;
 
         if (desiredDirection != Vector3.zero)
         {
@@ -141,14 +135,8 @@ public class PlayerController : MonoBehaviour
             if (m_jumRememberTimer > 0f && m_groundedRememberTimer > 0f)
             {
                 m_velocity.y = Mathf.Sqrt(m_jumpHeight * -2f * m_gravity);
-                //AudioManager.Instance.PlaySound(SoundType.JUMP);
             }
         }
-    }
-
-    public bool IsGrounded()
-    {
-        return isGrounded = Physics.CheckSphere(m_groundedCheck.position, m_groundDistance, m_groundMask);
     }
 
     public float GetGravity()

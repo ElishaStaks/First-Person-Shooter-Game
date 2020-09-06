@@ -111,10 +111,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_projectileType: 0
-  m_damageType: 0
-  m_damage: 90
+  m_damageType: 1
+  m_damage: 50
   m_blastRadius: 5
-  m_initialForce: 1000
+  m_initialForce: 2000
   m_explosiveForce: 20
   m_speed: 20
   m_lifeTime: 10

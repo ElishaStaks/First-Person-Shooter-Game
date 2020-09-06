@@ -25,8 +25,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1260783366481015071}
-  m_LocalRotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1365521653177840639}
@@ -120,8 +120,8 @@ GameObject:
   - component: {fileID: 1365521653177840639}
   - component: {fileID: 1365521653177840636}
   - component: {fileID: 1365521653177840637}
-  - component: {fileID: 6908020379870052230}
-  m_Layer: 0
+  - component: {fileID: 1314643086}
+  m_Layer: 8
   m_Name: M16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,20 +172,19 @@ MonoBehaviour:
   allowCancel: 0
   m_projectile: {fileID: 0}
   m_projectileSpawnSpot: {fileID: 0}
-  m_damage: 20
+  m_damage: 25
   m_forceMultiplier: 0
   m_range: 9999
   m_rateOfFire: 10
   m_infiniteAmmo: 0
   showCurrentAmmo: 1
   reloadAutomatically: 1
-  m_ammoText: {fileID: 0}
   m_ammoCapacity: 25
   m_roundsPerShot: 1
   m_reloadTime: 1
-  m_accuracy: 80
-  m_accuracyDropPerShot: 8
-  m_accuracyRecoverRate: 3
+  m_accuracy: 90
+  m_accuracyDropPerShot: 1
+  m_accuracyRecoverRate: 1
   m_burstRate: 5
   m_burstPause: 0
   recoil: 1
@@ -196,12 +195,12 @@ MonoBehaviour:
   m_recoilRecoveryRate: 10
   spitShells: 1
   m_shell: {fileID: 100000, guid: ffed35c05f0f1af45b1e04f88ad8eed0, type: 3}
+  m_shellSpitPosition: {fileID: 1365521653093348055}
   m_shellSpitForce: 1
   m_shellForceRandom: 0.5
   m_shellSpitTorqueX: 0
   m_shellSpitTorqueY: 0
   m_shellTorqueRandom: 1
-  m_shellSpitPosition: {fileID: 1365521653093348055}
   createMuzzleFlashEffect: 1
   m_muzzleFlashEffectPosition: {fileID: 3478308990349437706}
   m_muzzleFlashEffects:
@@ -211,15 +210,17 @@ MonoBehaviour:
     type: 3}
   m_bloodHitEffect: {fileID: 1000010191825552, guid: 83e55d3418297934fab882559d009285,
     type: 3}
-  showCrosshair: 1
   m_crosshairTexture: {fileID: 2800000, guid: 9397418d1d7b12543bf27fb61b93bbea, type: 3}
-  m_crosshairImage: {fileID: 0}
   m_crosshairLength: 10
   m_crosshairWidth: 4
   m_startingCrosshairSize: 10
-  m_shootSound: {fileID: 8300000, guid: 05b207f3eeb2e4345b5273e21976449e, type: 3}
+  hasPickedup: 0
+  m_audioGroup: {fileID: 9049046895195961999, guid: 2fcb83fc8c13d0d41a842c26a7aa9e64,
+    type: 2}
+  m_shootSound: {fileID: 8300000, guid: 14f37ac45dfd39c45bbc7ee53b8b1a8d, type: 3}
   m_reloadSound: {fileID: 8300000, guid: d23deffbd331a2a4a881b30af92f3926, type: 3}
-  m_dryShotSound: {fileID: 0}
+  m_dryShotSound: {fileID: 8300000, guid: 5dbbd23a67801454f990d49a43fbc089, type: 3}
+  createCollider: 1
 --- !u!82 &1365521653177840637
 AudioSource:
   m_ObjectHideFlags: 0
@@ -231,7 +232,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -316,7 +317,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &6908020379870052230
+--- !u!114 &1314643086
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -325,9 +326,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1365521653177840638}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95f3a9dbb1e457643aedc9cac74d18f3, type: 3}
+  m_Script: {fileID: 11500000, guid: 1c5073a7c0e9b78479d2100195d59890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_BobMultiplier: 1
+  m_BobbingSpeed: 0.1
+  m_BobbingAmount: 0.05
 --- !u!1 &7442789306489404013
 GameObject:
   m_ObjectHideFlags: 0

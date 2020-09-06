@@ -6,16 +6,14 @@ using TMPro;
 public class WeaponSystem : MonoBehaviour
 {
     [Header("System")]
-    public List<GameObject> m_weapons = new List<GameObject>();                // List that holds all the weapons the player can carry
-    public int m_startingIndex = 0;                                            // Weapon index the player will start with
+    public List<Weapon> m_weapons = new List<Weapon>();                // List that holds all the weapons the player can carry
+    public int m_startingIndex = 0;                                    // Weapon index the player will start with
 
     [Header("Pick Up")]
     public float m_pickupRange;
+    public TextMeshProUGUI m_ammoText;
 
-    public List<TextMeshProUGUI> m_ammoText = new List<TextMeshProUGUI>();
-    //public TextMeshProUGUI m_ammoText;
-
-    private int m_currentWeaponIndex;                                          // Current index of active weapon
+    private int m_currentWeaponIndex;                                  // Current index of active weapon
     private Transform m_playerCamera;
     private Weapon m_weapon;
 
@@ -25,16 +23,14 @@ public class WeaponSystem : MonoBehaviour
         // Starting weapon is the first indexed weapon
         m_currentWeaponIndex = m_startingIndex;
         SetActiveWeapon(m_currentWeaponIndex);
-
-        for (int i = 0; i < m_ammoText.Count; i++)
-        {
-            m_ammoText[i].gameObject.SetActive(false);
-        }
+        m_ammoText.gameObject.SetActive(true);
     }
 
     private void Update()
     {
         CastPickup();
+
+        m_ammoText.text = string.Format("{0} | {1}", m_weapon.GetCurrentAmmo(), m_weapon.GetAmmoCapacity());
 
         // Allow the user to instantly switch to any weapon
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -78,14 +74,12 @@ public class WeaponSystem : MonoBehaviour
         // deactivates all weapons
         for (int i = 0; i < m_weapons.Count; i++)
         {
-            m_weapons[i].SetActive(false);
-            m_ammoText[index].gameObject.SetActive(false);
-            
+            m_weapons[i].gameObject.SetActive(false);
         }
 
         // Activates chosen weapon
-        m_weapons[index].SetActive(true);
-        m_ammoText[index].gameObject.SetActive(true);
+        m_weapons[index].gameObject.SetActive(true);
+        m_weapon = m_weapons[index];
     }
 
     public void SetWeaponOnPickup(GameObject weapon)
@@ -133,13 +127,13 @@ public class WeaponSystem : MonoBehaviour
 
             if (Physics.Raycast(m_playerCamera.position, m_playerCamera.forward, out hit, m_pickupRange))
             {
-                var weapon = hit.transform.GetComponent<Weapon>();
+                m_weapon = hit.transform.GetComponent<Weapon>();
 
-                if (weapon != null)
+                if (m_weapon != null)
                 {
-                    weapon.WeaponPickup(transform, m_ammoText);
-                    m_weapons.Add(weapon.gameObject);
-                    SetWeaponOnPickup(weapon.gameObject);
+                    m_weapon.WeaponPickup(transform);
+                    m_weapons.Add(m_weapon);
+                    SetWeaponOnPickup(m_weapon.gameObject);
                 }
             }
         }

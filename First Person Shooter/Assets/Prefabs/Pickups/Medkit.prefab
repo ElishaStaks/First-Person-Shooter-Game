@@ -128,7 +128,6 @@ MonoBehaviour:
   m_particleEffect: {fileID: 1531658931269940030, guid: de10d806a9c13234fb12329a5ed13692,
     type: 3}
   m_healthUI: {fileID: 0}
-  audiosource: {fileID: 0}
 --- !u!135 &8254244059237361138
 SphereCollider:
   m_ObjectHideFlags: 0
